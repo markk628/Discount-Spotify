@@ -1,0 +1,46 @@
+PODS:
+  - Alamofire (4.9.1)
+  - AlamofireObjectMapper (5.2.1):
+    - Alamofire (~> 4.7)
+    - ObjectMapper (~> 3.4)
+  - AlamoRecord (1.2.2):
+    - AlamofireObjectMapper (~> 5.1)
+  - Kingfisher (5.15.8):
+    - Kingfisher/Core (= 5.15.8)
+  - Kingfisher/Core (5.15.8)
+  - ObjectMapper (3.5.3)
+  - SnapKit (5.0.1)
+  - Spartan (1.2.1):
+    - AlamoRecord (~> 1.2.0)
+  - SwipeableTabBarController (3.3.0)
+
+DEPENDENCIES:
+  - Kingfisher (~> 5.0)
+  - SnapKit (~> 5.0.1)
+  - Spartan
+  - SwipeableTabBarController
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - AlamofireObjectMapper
+    - AlamoRecord
+    - Kingfisher
+    - ObjectMapper
+    - SnapKit
+    - Spartan
+    - SwipeableTabBarController
+
+SPEC CHECKSUMS:
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  AlamofireObjectMapper: 1989f690e982b71921b9253f53a4f33a9bc00d88
+  AlamoRecord: 5850c563a811fdca40cd361b1b27622004bccef3
+  Kingfisher: a3c03d702433fa6cfedabb2bddbe076fb8f2e902
+  ObjectMapper: 97111c97e054a6ee25917662106689f0b4127b37
+  SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+  Spartan: 2fb99ad25f2b0e8182799f251c800091977f0a40
+  SwipeableTabBarController: c815145a8d8f880d1a329044e5cf6e99c1c973e7
+
+PODFILE CHECKSUM: a519ace41e66edc2de247e5b7a09d0a4d02486d8
+
+COCOAPODS: 1.10.0.beta.2
