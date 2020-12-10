@@ -14,4 +14,17 @@ extension UIViewController {
         alert.addAction(dismissButton)
         self.present(alert, animated: true, completion: nil)
     }
+    
+    func createGradientLayer(vc: UIViewController) {
+        let gradientLayer: CAGradientLayer = {
+            let layer = CAGradientLayer()
+            layer.frame = self.view.bounds
+            layer.colors = [UIColor.blueCola.cgColor, UIColor.black.cgColor]
+            layer.startPoint = CGPoint(x: 0, y: 1)
+            layer.endPoint = CGPoint(x: 0.5, y: 0.5)
+            return layer
+        }()
+        
+        vc.view.layer.addSublayer(gradientLayer)
+    }
 }

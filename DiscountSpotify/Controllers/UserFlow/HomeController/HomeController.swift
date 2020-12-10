@@ -9,16 +9,6 @@ import UIKit
 import SnapKit
 import Spartan
 
-enum LightOrDarkMode {
-    static var whatMode: [CGColor] {
-        if UIViewController().traitCollection.userInterfaceStyle == .light {
-            return [UIColor.fluorescentBlue.cgColor, UIColor.white.cgColor]
-        } else {
-            return [UIColor.fluorescentBlue.cgColor, UIColor.black.cgColor]
-        }
-    }
-}
-
 class HomeController: UIViewController {
     
     var coordinator: TabBarCoordinator!
@@ -44,17 +34,9 @@ class HomeController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = 150
+//        tableView.separatorStyle = .none
         tableView.register(ArtistCell.self, forCellReuseIdentifier: ArtistCell.identifier)
         return tableView
-    }()
-    
-    lazy var gradientLayer: CAGradientLayer = {
-        let layer = CAGradientLayer()
-        layer.frame = self.view.bounds
-        layer.colors = [UIColor.fluorescentBlue.cgColor, UIColor.systemBackground.cgColor]
-        layer.startPoint = CGPoint(x: 0, y: 1)
-        layer.endPoint = CGPoint(x: 0.5, y: 0.5)
-        return layer
     }()
     
 //    var isSearchBarEmpty: Bool {
@@ -68,7 +50,6 @@ class HomeController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        fetchMytopArtists()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -76,16 +57,10 @@ class HomeController: UIViewController {
         offset = 0
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        guard UIApplication.shared.applicationState == .inactive else { return }
-        setUpGradientLayerColor()
-    }
-    
     fileprivate func setupViews() {
-        self.view.backgroundColor = .systemBackground
-        self.view.layer.addSublayer(gradientLayer)
+        self.createGradientLayer(vc: self)
         self.title = "Your Top Artists"
+        fetchMytopArtists()
 //        setupSearchController()
         
         self.view.addSubview(artistsTableView)
@@ -99,19 +74,20 @@ class HomeController: UIViewController {
 //        definesPresentationContext = true
 //    }
     
-    func setUpGradientLayerColor() {
-        gradientLayer.colors = LightOrDarkMode.whatMode
-    }
-    
     func fetchMytopArtists() {
-        NetworkManager.getMyTopArtists { (result) in
+        NetworkManager.getMyTopArtists(offset: offset) { (result) in
             switch result {
             case .failure(let error):
-                print(error)
+                DispatchQueue.main.async {
+                    self.presentAlert(title: "Failed Getting Your Artists", message: error.localizedDescription)
+                    print(error.localizedDescription)
+                }
             case .success(let artists):
                 self.artists = artists
                 self.offset = self.artists.count - 1
-                self.artistsTableView.reloadData()
+                DispatchQueue.main.async {
+                    self.artistsTableView.reloadData()
+                }
             }
         }
     }
@@ -120,7 +96,7 @@ class HomeController: UIViewController {
 extension HomeController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let artist = artists[indexPath.row]
-        self.coordinator.goToArtistController(artist: artist)
+        self.coordinator.goToArtistControllerHome(artist: artist)
     }
 }
 

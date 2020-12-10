@@ -10,10 +10,11 @@ import Spartan
 
 class ArtistController: UIViewController {
     
+    var coordinator: TabBarCoordinator!
     var artist: Artist!
     var tracks: [Track] = []
     lazy var artistId = self.artist.id as! String
-
+    
     lazy var tracksTableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .clear
@@ -27,12 +28,12 @@ class ArtistController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        fetchTracks()
     }
     
     fileprivate func setupViews() {
-        self.view.backgroundColor = .systemBackground
+        self.view.backgroundColor = .black
         self.title = artist.name
+        fetchTracks()
         self.view.addSubview(tracksTableView)
         tracksTableView.snp.makeConstraints {
             $0.edges.equalToSuperview()
@@ -46,7 +47,6 @@ class ArtistController: UIViewController {
                 self.presentAlert(title: "Error Fetching Tracks", message: error.localizedDescription)
             case .success(let tracks):
                 self.tracks = tracks
-                
                 DispatchQueue.main.async {
                     self.tracksTableView.reloadData()
                 }
@@ -56,7 +56,10 @@ class ArtistController: UIViewController {
 }
 
 extension ArtistController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let track = tracks[indexPath.row]
+        self.coordinator.goToTrackControllerHome(track: track)
+    }
 }
 
 extension ArtistController: UITableViewDataSource {
@@ -66,9 +69,13 @@ extension ArtistController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TrackCell.identifier, for: indexPath) as! TrackCell
-        
-        let track = tracks[indexPath.row]
-        cell.populateViews(track: track, rank: indexPath.row + 1)
+        DispatchQueue.global(qos: .userInteractive).async {
+            let track = self.tracks[indexPath.row]
+            DispatchQueue.main.async {
+                cell.populateViews(track: track, rank: indexPath.row + 1)
+                cell.layoutSubviews()
+            }
+        }
         return cell
     }
     

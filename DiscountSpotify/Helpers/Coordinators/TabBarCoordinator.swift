@@ -61,15 +61,24 @@ extension TabBarCoordinator {
         tabBarController.selectedIndex = 2
     }
     
-    func goToArtistController(artist: Artist) {
+    func goToArtistControllerHome(artist: Artist) {
         let vc = ArtistController()
         vc.artist = artist
+        vc.coordinator = self
         homeNavigationController.pushViewController(vc, animated: true)
     }
     
-    func goToTrackController(track: Track) {
+    func goToTrackControllerHome(track: Track) {
         let vc = TrackController()
         vc.track = track
-        
+        vc.coordinator = self
+        homeNavigationController.pushViewController(vc, animated: true)
+    }
+    
+    func goToTrackControllerFavorite(track: Track) {
+        let vc = TrackController()
+        vc.track = track
+        vc.coordinator = self
+        favoritesNavigationController.pushViewController(vc, animated: true)
     }
 }

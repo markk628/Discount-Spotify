@@ -38,10 +38,25 @@ class TrackCell: UITableViewCell {
         return imageView
     }()
     
+    lazy var trackStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        return stackView
+    }()
+    
     lazy var trackNameLabel: UILabel = {
         let label: UILabel = UILabel()
         label.textColor = .electricBlue
         label.font = label.font.withSize(20)
+        label.textAlignment = .left
+        return label
+    }()
+    
+    lazy var albumNameLabel: UILabel = {
+        let label: UILabel = UILabel()
+        label.textColor = .electricBlue
+        label.font = label.font.withSize(15)
         label.textAlignment = .left
         return label
     }()
@@ -68,20 +83,25 @@ class TrackCell: UITableViewCell {
             $0.bottom.equalToSuperview().offset(-5)
         }
         
-        mainStackView.addArrangedSubview(trackRankLabel)
+        [trackRankLabel, albumImageView, trackStackView].forEach {
+            mainStackView.addArrangedSubview($0)
+        }
         trackRankLabel.snp.makeConstraints {
             $0.width.height.equalTo(25)
         }
-        
-        mainStackView.addArrangedSubview(albumImageView)
         albumImageView.snp.makeConstraints {
-            $0.height.width.equalTo(self.contentView.snp.height).multipliedBy(0.8)
+            $0.height.width.equalTo(mainStackView.snp.height).multipliedBy(0.8)
         }
-
-        mainStackView.addArrangedSubview(trackNameLabel)
-        trackNameLabel.snp.makeConstraints {
+        trackStackView.snp.makeConstraints {
             $0.height.equalTo(50)
             $0.width.lessThanOrEqualToSuperview()
+        }
+        
+        [trackNameLabel, albumNameLabel].forEach {
+            trackStackView.addArrangedSubview($0)
+            $0.snp.makeConstraints {
+                $0.height.equalToSuperview().multipliedBy(0.5)
+            }
         }
     }
     
@@ -89,6 +109,7 @@ class TrackCell: UITableViewCell {
         self.track = track
         trackRankLabel.text = "\(rank)"
         trackNameLabel.text = track.name
+        albumNameLabel.text = track.album.name
         
         guard let urlString = track.album?.images.first?.url,
               let imageUrl = URL(string: urlString) else { return }
@@ -96,7 +117,7 @@ class TrackCell: UITableViewCell {
             
         } completionHandler: { (result) in
             do {
-                let _ = try result.get() //value
+                let _ = try result.get()
             } catch {
                 DispatchQueue.main.async {
                     print("Done downloading image")

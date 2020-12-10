@@ -78,7 +78,6 @@ class NetworkManager {
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             do {
-                //MARK: if error try if let
                 guard let spotifyAuth = try? decoder.decode(SpotifyAuth.self, from: data) else {
                     return completion(.failure(ErrorMessage.couldNotParse(message: "Failed to decode data")))
                 }
@@ -129,7 +128,7 @@ class NetworkManager {
     
     static func getUser(accessToken: String, completion: @escaping (Result<User, Error>) -> Void) {
         Spartan.authorizationToken = accessToken
-        _ = Spartan.getMe(success: { (spartanUser) in
+        Spartan.getMe(success: { (spartanUser) in
             let user = User(user: spartanUser)
             completion(.success(user))
         }, failure: { (error) in
@@ -140,8 +139,8 @@ class NetworkManager {
         })
     }
     
-    static func getMyTopArtists(completion: @escaping (Result<[Artist], Error>) -> Void) {
-        _ = Spartan.getMyTopArtists(limit: 20, offset: 0, timeRange: .mediumTerm, success: { (pagingObject) in
+    static func getMyTopArtists(offset: Int, completion: @escaping (Result<[Artist], Error>) -> Void) {
+        Spartan.getMyTopArtists(limit: 50, offset: offset, timeRange: .mediumTerm, success: { (pagingObject) in
             completion(.success(pagingObject.items))
         }, failure: { (error) in
             completion(.failure(error))
@@ -149,26 +148,41 @@ class NetworkManager {
     }
     
     static func getArtistTopTracks(artistId: String, country: CountryCode = .us, completion: @escaping (Result<[Track], Error>) -> Void) {
-        _ = Spartan.getArtistsTopTracks(artistId: artistId, country: country) { (tracks) in
+        Spartan.getArtistsTopTracks(artistId: artistId, country: country) { (tracks) in
             completion(.success(tracks))
         } failure: { (error) in
             completion(.failure(error))
         }
     }
     
-    static func checkIfFavorite(trackId: String, completion: @escaping (_ savedBools: Bool) -> Void) {
-        Spartan.tracksAreSaved(trackIds: [trackId]) { (savedBools) in
-            guard let isSaved = savedBools.first else { return }
-            completion(isSaved)
+//    static func getFavoriteTracks(offset: Int, completion: @escaping (Result<[SavedTrack], Error>) -> Void) {
+//        Spartan.getSavedTracks(limit: 50, offset: offset, market: .us) { (pagingObject) in
+//            completion(.success(pagingObject.items))
+//        } failure: { (error) in
+//            completion(.failure(error))
+//        }
+//    }
+    
+    static func getCoreDataTracks(ids: [String], market: CountryCode = .us, completion: @escaping (Result<[Track], Error>) -> Void) {
+        Spartan.getTracks(ids: ids, market: market) { (tracks) in
+            completion(.success(tracks))
         } failure: { (error) in
-            print("Error check if track is saved")
+            completion(.failure(error))
         }
-
     }
     
-    fileprivate static func saveTokens(accessToken: String, refreshToken: String) {
-        UserDefaults.standard.setValue(accessToken, forKey: Constants.accessToken)
-        UserDefaults.standard.setValue(refreshToken, forKey: Constants.refreshToken)
-        Spartan.authorizationToken = accessToken
+    static func getProfileInfo(completion: @escaping (Result<PrivateUser, Error>) -> Void) {
+        Spartan.getMe { (user) in
+            completion(.success(user))
+        } failure: { (error) in
+            completion(.failure(error))
+        }
+        
     }
+    
+//    fileprivate static func saveTokens(accessToken: String, refreshToken: String) {
+//        UserDefaults.standard.setValue(accessToken, forKey: Constants.accessToken)
+//        UserDefaults.standard.setValue(refreshToken, forKey: Constants.refreshToken)
+//        Spartan.authorizationToken = accessToken
+//    }
 }

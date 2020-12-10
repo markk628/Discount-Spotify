@@ -58,7 +58,7 @@ class LogInController: UIViewController, ASWebAuthenticationPresentationContextP
     }
     
     fileprivate func setupViews() {
-        self.view.backgroundColor = .systemBackground
+        self.view.backgroundColor = .black
         
 //        self.view.addSubview(backgroundImage)
 //        backgroundImage.snp.makeConstraints {
@@ -115,7 +115,6 @@ class LogInController: UIViewController, ASWebAuthenticationPresentationContextP
     }
     
     @objc private func logInSpotifyButtonTapped() {
-        print("pressed")
         authenticate()
     }
     
@@ -137,14 +136,18 @@ class LogInController: UIViewController, ASWebAuthenticationPresentationContextP
                 switch result {
                 case .failure(let error):
                     DispatchQueue.main.async {
+                        self.presentAlert(title: "Failed To Login", message: error.localizedDescription)
                         print(error.localizedDescription)
                     }
                 case .success(let spotifyAuth):
                     NetworkManager.getUser(accessToken: spotifyAuth.accessToken) { (result) in
                         switch result {
                         case .failure(let error):
-                            print(error)
-                        case .success(let user):
+                            DispatchQueue.main.async {
+                                self.presentAlert(title: "Failed To Get User", message: error.localizedDescription)
+                                print(error.localizedDescription)
+                            }
+                        case .success(_):
                             self.coordinator.goToHomeController()
                         }
                     }
