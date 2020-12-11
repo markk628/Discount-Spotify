@@ -65,6 +65,7 @@ class FavoritesController: UIViewController {
     
     func fetchFavTracks() {
         do {
+            trackIds.removeAll()
             try fetchedResultsController.performFetch()
             let favTracks = fetchedResultsController.fetchedObjects
             favTracks?.forEach({ (result) in
@@ -74,7 +75,7 @@ class FavoritesController: UIViewController {
                 switch result {
                 case .failure(let error):
                     DispatchQueue.main.async {
-                        self.presentAlert(title: "Error Getting Favorite Tracks", message: error.localizedDescription)
+                        self.presentAlert(title: "No Tracks", message: "Add Tracks To Your Favorites")
                         print(error.localizedDescription)
                     }
                 case .success(let tracks):

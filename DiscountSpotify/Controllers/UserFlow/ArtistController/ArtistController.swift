@@ -69,7 +69,7 @@ extension ArtistController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TrackCell.identifier, for: indexPath) as! TrackCell
-        DispatchQueue.global(qos: .userInteractive).async {
+        DispatchQueue.global().async {
             let track = self.tracks[indexPath.row]
             DispatchQueue.main.async {
                 cell.populateViews(track: track, rank: indexPath.row + 1)

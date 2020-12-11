@@ -16,8 +16,9 @@ class LogInController: UIViewController, ASWebAuthenticationPresentationContextP
 
     private let backgroundImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "loginpage2")
+        imageView.image = UIImage(named: "loginpage")
         imageView.contentMode = .scaleToFill
+        imageView.isUserInteractionEnabled = true
         return imageView
     }()
     
@@ -60,58 +61,58 @@ class LogInController: UIViewController, ASWebAuthenticationPresentationContextP
     fileprivate func setupViews() {
         self.view.backgroundColor = .black
         
-//        self.view.addSubview(backgroundImage)
-//        backgroundImage.snp.makeConstraints {
-//            $0.edges.equalToSuperview()
-//        }
-//
-//        backgroundImage.addSubview(opacityView)
-//        opacityView.snp.makeConstraints {
-//            $0.edges.equalToSuperview()
-//        }
-//
-//        opacityView.addSubview(spotifyLogoImage)
-//        spotifyLogoImage.snp.makeConstraints {
-//            $0.centerX.equalToSuperview()
-//            $0.centerY.equalToSuperview().dividedBy(2.7)
-//            $0.height.width.equalTo(170)
-//        }
-//
-//        opacityView.addSubview(spotifyLabel)
-//        spotifyLabel.snp.makeConstraints {
-//            $0.centerX.equalToSuperview()
-//            $0.top.equalTo(spotifyLogoImage.snp.bottom).offset(-30)
-//            $0.height.equalTo(100)
-//        }
-//
-//        opacityView.addSubview(logInSpotifyButton)
-//        logInSpotifyButton.snp.makeConstraints {
-//            $0.centerX.equalToSuperview()
-//            $0.height.equalTo(50)
-//            $0.width.equalToSuperview().multipliedBy(0.75)
-//            $0.bottom.equalToSuperview().offset(-100)
+        self.view.addSubview(backgroundImage)
+        backgroundImage.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
 
-        self.view.addSubview(spotifyLogoImage)
+        backgroundImage.addSubview(opacityView)
+        opacityView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+
+        opacityView.addSubview(spotifyLogoImage)
         spotifyLogoImage.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.centerY.equalToSuperview().dividedBy(2.7)
             $0.height.width.equalTo(170)
         }
 
-        self.view.addSubview(spotifyLabel)
+        opacityView.addSubview(spotifyLabel)
         spotifyLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(spotifyLogoImage.snp.bottom).offset(-30)
             $0.height.equalTo(100)
         }
-        
-        self.view.addSubview(logInSpotifyButton)
+
+        opacityView.addSubview(logInSpotifyButton)
         logInSpotifyButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.height.equalTo(50)
             $0.width.equalToSuperview().multipliedBy(0.75)
             $0.bottom.equalToSuperview().offset(-100)
         }
+//        self.view.addSubview(spotifyLogoImage)
+//        spotifyLogoImage.snp.makeConstraints {
+//            $0.centerX.equalToSuperview()
+//            $0.centerY.equalToSuperview().dividedBy(2.7)
+//            $0.height.width.equalTo(170)
+//        }
+//
+//        self.view.addSubview(spotifyLabel)
+//        spotifyLabel.snp.makeConstraints {
+//            $0.centerX.equalToSuperview()
+//            $0.top.equalTo(spotifyLogoImage.snp.bottom).offset(-30)
+//            $0.height.equalTo(100)
+//        }
+//
+//        self.view.addSubview(logInSpotifyButton)
+//        logInSpotifyButton.snp.makeConstraints {
+//            $0.centerX.equalToSuperview()
+//            $0.height.equalTo(50)
+//            $0.width.equalToSuperview().multipliedBy(0.75)
+//            $0.bottom.equalToSuperview().offset(-100)
+//        }
     }
     
     @objc private func logInSpotifyButtonTapped() {
