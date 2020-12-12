@@ -14,6 +14,6 @@ An iOS app that authenticates users through Spotify, makes network calls to show
 ## Tools
 * Spotify API
 * Core Data
-* [Spartan] (https://github.com/Daltron/Spartan)
-* [Kingfisher] (https://github.com/onevcat/Kingfisher)
-* [Snapkit] (https://github.com/SnapKit/SnapKit)
+* [Spartan](https://github.com/Daltron/Spartan)
+* [Kingfisher](https://github.com/onevcat/Kingfisher)
+* [Snapkit](https://github.com/SnapKit/SnapKit)
