@@ -12,7 +12,6 @@ An iOS app that authenticates users through Spotify, makes network calls to show
 * Users can browse the artists' top 10 tracks and play a 30 second preview
 * Users can save tracks at the local level using CoreData
 ## Tools
-* Spotify API
 * Core Data
 * [Spartan](https://github.com/Daltron/Spartan)
 * [Kingfisher](https://github.com/onevcat/Kingfisher)
