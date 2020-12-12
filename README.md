@@ -4,7 +4,7 @@ An iOS app that authenticates users through Spotify, makes network calls to show
 ### Authentication
 ![](static/authenticate.gif)
 ### Saving a Track
-![](static/addsongs.gif)
+![](static/addsong.gif)
 ## How It Works
 * Users authenticate with their Spotify account so the network calls can be made to pull the proper data
 * The HomeController will have a tableview populated by the user's top artists according to Spotify
