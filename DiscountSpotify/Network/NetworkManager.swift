@@ -179,10 +179,4 @@ class NetworkManager {
         }
         
     }
-    
-//    fileprivate static func saveTokens(accessToken: String, refreshToken: String) {
-//        UserDefaults.standard.setValue(accessToken, forKey: Constants.accessToken)
-//        UserDefaults.standard.setValue(refreshToken, forKey: Constants.refreshToken)
-//        Spartan.authorizationToken = accessToken
-//    }
 }

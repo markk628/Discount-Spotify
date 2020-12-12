@@ -78,10 +78,7 @@ class HomeController: UIViewController {
         NetworkManager.getMyTopArtists(offset: offset) { (result) in
             switch result {
             case .failure(let error):
-                DispatchQueue.main.async {
-                    self.presentAlert(title: "Failed Getting Your Artists", message: error.localizedDescription)
-                    print(error.localizedDescription)
-                }
+                self.presentAlert(title: "Failed Getting Your Artists", message: error.localizedDescription)
             case .success(let artists):
                 self.artists = artists
                 self.offset = self.artists.count - 1
@@ -107,7 +104,7 @@ extension HomeController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ArtistCell.identifier, for: indexPath) as! ArtistCell
-        DispatchQueue.global(qos: .userInteractive).async {
+        DispatchQueue.global().async {
             let artist = self.artists[indexPath.row]
             DispatchQueue.main.async {
                 cell.populateViews(artist: artist, rank: indexPath.row + 1)

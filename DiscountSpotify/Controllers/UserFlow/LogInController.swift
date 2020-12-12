@@ -92,27 +92,6 @@ class LogInController: UIViewController, ASWebAuthenticationPresentationContextP
             $0.width.equalToSuperview().multipliedBy(0.75)
             $0.bottom.equalToSuperview().offset(-100)
         }
-//        self.view.addSubview(spotifyLogoImage)
-//        spotifyLogoImage.snp.makeConstraints {
-//            $0.centerX.equalToSuperview()
-//            $0.centerY.equalToSuperview().dividedBy(2.7)
-//            $0.height.width.equalTo(170)
-//        }
-//
-//        self.view.addSubview(spotifyLabel)
-//        spotifyLabel.snp.makeConstraints {
-//            $0.centerX.equalToSuperview()
-//            $0.top.equalTo(spotifyLogoImage.snp.bottom).offset(-30)
-//            $0.height.equalTo(100)
-//        }
-//
-//        self.view.addSubview(logInSpotifyButton)
-//        logInSpotifyButton.snp.makeConstraints {
-//            $0.centerX.equalToSuperview()
-//            $0.height.equalTo(50)
-//            $0.width.equalToSuperview().multipliedBy(0.75)
-//            $0.bottom.equalToSuperview().offset(-100)
-//        }
     }
     
     @objc private func logInSpotifyButtonTapped() {
@@ -154,7 +133,6 @@ class LogInController: UIViewController, ASWebAuthenticationPresentationContextP
                     }
                 }
             }
-        
         }
         session.presentationContextProvider = self
         session.start()
