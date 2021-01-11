@@ -6,13 +6,27 @@
 //
 
 import UIKit
-import AuthenticationServices
+//import AuthenticationServices
 import SnapKit
 import Spartan
 
-class LogInController: UIViewController, ASWebAuthenticationPresentationContextProviding {
+class LogInController: UIViewController {
 
     var coordinator: AppCoordinator!
+    
+    lazy var appRemote: SPTAppRemote = {
+        let appRemote = SPTAppRemote(configuration: NetworkManager.configuration, logLevel: .debug)
+        appRemote.connectionParameters.accessToken = SpotifyAuth.current?.accessToken
+        appRemote.delegate = self
+        return appRemote
+    }()
+    
+    lazy var sessionManager: SPTSessionManager? = {
+        let manager = SPTSessionManager(configuration: NetworkManager.configuration, delegate: self)
+        return manager
+    }()
+    
+    private var lastPlayerState: SPTAppRemotePlayerState?
 
     private let backgroundImage: UIImageView = {
         let imageView = UIImageView()
@@ -94,48 +108,130 @@ class LogInController: UIViewController, ASWebAuthenticationPresentationContextP
         }
     }
     
-    @objc private func logInSpotifyButtonTapped() {
-        authenticate()
-    }
-    
-    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return self.view.window ?? ASPresentationAnchor()
-    }
-    
-    func authenticate() {
-        let scopeAsString = NetworkManager.stringScopes.joined(separator: "%20")
-        let url = URL(string: "https://accounts.spotify.com/authorize?client_id=\(NetworkManager.clientId)&response_type=code&redirect_uri=\(NetworkManager.redirectURI)&scope=\(scopeAsString)")!
-        let scheme = "auth"
-        let session = ASWebAuthenticationSession(url: url, callbackURLScheme: scheme) { (callbackUrl, error) in
-            guard let callbackUrl = callbackUrl, error == nil else { return }
-            let queryItems = URLComponents(string: callbackUrl.absoluteString)?.queryItems
-            
-            guard let requestToken = queryItems?.first(where: { $0.name == "code" })?.value else { return }
-            NetworkManager.authorizationCode = requestToken
-            NetworkManager.fetchAccessToken { (result) in
-                switch result {
-                case .failure(let error):
+    func fetchSpotifyAccessToken() {
+        guard let _ = NetworkManager.authorizationCode else { return } //makes sure we have authorization code
+        appRemote.connect() //connect appRemote to pause Spotify
+        //fetch access token
+        NetworkManager.fetchAccessToken { (result) in
+            switch result {
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.presentAlert(title: "Error fetching token", message: error.localizedDescription)
+                }
+            case .success(let spotifyAuth):
+                NetworkManager.getUser(accessToken: spotifyAuth.accessToken) { (result) in
                     DispatchQueue.main.async {
-                        self.presentAlert(title: "Failed To Login", message: error.localizedDescription)
-                        print(error.localizedDescription)
-                    }
-                case .success(let spotifyAuth):
-                    NetworkManager.getUser(accessToken: spotifyAuth.accessToken) { (result) in
                         switch result {
                         case .failure(let error):
-                            DispatchQueue.main.async {
-                                self.presentAlert(title: "Failed To Get User", message: error.localizedDescription)
-                                print(error.localizedDescription)
-                            }
-                        case .success(_):
+                            self.presentAlert(title: "Error fetching user", message: error.localizedDescription)
+                        case .success(let user):
+                            let user = User(user: user)
+                            User.setCurrent(user, writeToUserDefaults: true)
+                            print("Got user \(user.name)")
                             self.coordinator.goToHomeController()
                         }
                     }
                 }
             }
         }
-        session.presentationContextProvider = self
-        session.start()
+    }
+    
+    @objc private func logInSpotifyButtonTapped() {
+//        authenticate()
+        guard let sessionManager = sessionManager else { return }
+        if #available(iOS 11, *) {
+            // Use this on iOS 11 and above to take advantage of SFAuthenticationSession
+            sessionManager.initiateSession(with: scopes, options: .clientOnly)
+        } else {
+            // Use this on iOS versions < 11 to use SFSafariViewController
+            sessionManager.initiateSession(with: scopes, options: .clientOnly, presenting: self)
+        }
+    }
+    
+//    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+//        return self.view.window ?? ASPresentationAnchor()
+//    }
+    
+//    func authenticate() {
+//        let scopeAsString = NetworkManager.stringScopes.joined(separator: "%20")
+//        let url = URL(string: "https://accounts.spotify.com/authorize?client_id=\(NetworkManager.clientId)&response_type=code&redirect_uri=\(NetworkManager.redirectURI)&scope=\(scopeAsString)")!
+//        let scheme = "auth"
+//        let session = ASWebAuthenticationSession(url: url, callbackURLScheme: scheme) { (callbackUrl, error) in
+//            guard let callbackUrl = callbackUrl, error == nil else { return }
+//            let queryItems = URLComponents(string: callbackUrl.absoluteString)?.queryItems
+//
+//            guard let requestToken = queryItems?.first(where: { $0.name == "code" })?.value else { return }
+//            NetworkManager.authorizationCode = requestToken
+//            NetworkManager.fetchAccessToken { (result) in
+//                switch result {
+//                case .failure(let error):
+//                    DispatchQueue.main.async {
+//                        self.presentAlert(title: "Failed To Login", message: error.localizedDescription)
+//                        print(error.localizedDescription)
+//                    }
+//                case .success(let spotifyAuth):
+//                    NetworkManager.getUser(accessToken: spotifyAuth.accessToken) { (result) in
+//                        switch result {
+//                        case .failure(let error):
+//                            DispatchQueue.main.async {
+//                                self.presentAlert(title: "Failed To Get User", message: error.localizedDescription)
+//                                print(error.localizedDescription)
+//                            }
+//                        case .success(_):
+//                            self.coordinator.goToHomeController()
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        session.presentationContextProvider = self
+//        session.start()
+//    }
+}
+
+// MARK: - SPTAppRemoteDelegate
+extension LogInController: SPTAppRemoteDelegate {
+    func appRemoteDidEstablishConnection(_ appRemote: SPTAppRemote) {
+        self.appRemote.playerAPI?.pause(nil)
+        self.appRemote.disconnect()
+    }
+
+    func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
+//        updateViewBasedOnConnected()
+        lastPlayerState = nil
+    }
+
+    func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
+//        updateViewBasedOnConnected()
+        lastPlayerState = nil
+    }
+}
+
+// MARK: - SPTAppRemotePlayerAPIDelegate
+//extension LogInController: SPTAppRemotePlayerStateDelegate {
+//    func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
+//        debugPrint("Spotify Track name: %@", playerState.track.name)
+//        update(playerState: playerState)
+//    }
+//}
+
+// MARK: - SPTSessionManagerDelegate
+extension LogInController: SPTSessionManagerDelegate {
+    func sessionManager(manager: SPTSessionManager, didFailWith error: Error) {
+        if error.localizedDescription == "The operation couldn’t be completed. (com.spotify.sdk.login error 1.)" {
+            print("AUTHENTICATE with WEBAPI")
+        } else {
+            presentAlert(title: "Authorization Failed", message: error.localizedDescription)
+        }
+    }
+
+    func sessionManager(manager: SPTSessionManager, didRenew session: SPTSession) {
+        presentAlert(title: "Session Renewed", message: session.description)
+    }
+
+    func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
+        appRemote.connectionParameters.accessToken = session.accessToken
+        appRemote.connect()
     }
 }
 

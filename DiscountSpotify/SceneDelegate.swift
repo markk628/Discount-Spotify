@@ -6,11 +6,25 @@
 //
 
 import UIKit
+import Spartan
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     var coordinator: AppCoordinator!
+    lazy var loginController = LogInController()
+    
+    //MARK: Spotify Properties
+    
+    var playURI: String = ""
+    var lastPlayerState: SPTAppRemotePlayerState?
+    
+    lazy var appRemote: SPTAppRemote = {
+        let appRemote = SPTAppRemote(configuration: NetworkManager.configuration, logLevel: .debug)
+        appRemote.connectionParameters.accessToken = SpotifyAuth.current?.accessToken
+        appRemote.delegate = self
+        return appRemote
+    }()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -21,40 +35,117 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window!.makeKeyAndVisible()
         window!.windowScene = windowScene
         coordinator = AppCoordinator(window: window!)
-        coordinator.goToLogInController()
+        configureRootViewController()
     }
 
-    func sceneDidDisconnect(_ scene: UIScene) {
-        // Called as the scene is being released by the system.
-        // This occurs shortly after the scene enters the background, or when its session is discarded.
-        // Release any resources associated with this scene that can be re-created the next time the scene connects.
-        // The scene may re-connect later, as its session was not necessarily discarded (see `application:didDiscardSceneSessions` instead).
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        guard let url = URLContexts.first?.url else { return }
+        let parameters = loginController.appRemote.authorizationParameters(from: url)
+        if let code = parameters?["code"] {
+            NetworkManager.authorizationCode = code
+            loginController.fetchSpotifyAccessToken()
+        } else if let accessToken = parameters?[SPTAppRemoteAccessTokenKey] {
+            appRemote.connectionParameters.accessToken = accessToken
+            if var spotifyAuth = SpotifyAuth.current {
+                spotifyAuth.accessToken = accessToken
+                SpotifyAuth.setCurrent(spotifyAuth, writeToUserDefaults: true)
+            } else {
+                let spotifyAuth = SpotifyAuth(tokenType: nil, refreshToken: nil, accessToken: accessToken, expiresIn: nil, scope: nil)
+                SpotifyAuth.setCurrent(spotifyAuth, writeToUserDefaults: true)
+            }
+        } else if let error_description = parameters?[SPTAppRemoteErrorDescriptionKey] {
+            print("No access token error =", error_description)
+        }
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        // Called when the scene has moved from an inactive state to an active state.
-        // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        if let _ = self.appRemote.connectionParameters.accessToken {
+            self.appRemote.connect()
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        // Called when the scene will move from an active state to an inactive state.
-        // This may occur due to temporary interruptions (ex. an incoming phone call).
+        if self.appRemote.isConnected {
+            self.appRemote.disconnect()
+        }
     }
+}
 
-    func sceneWillEnterForeground(_ scene: UIScene) {
-        // Called as the scene transitions from the background to the foreground.
-        // Use this method to undo the changes made on entering the background.
+extension SceneDelegate {
+    func configureRootViewController() {
+        if let _ = User.current, let refreshToken = SpotifyAuth.current?.refreshToken  { //if we have a user, then go to home
+            if let accessToken = SpotifyAuth.current?.accessToken {
+                NetworkManager.getUser(accessToken: accessToken) { (result) in
+                    switch result {
+                    case .failure(let error):
+                        print("couldn't fetch user \(error.localizedDescription)")
+                    case .success(let user):
+                        let user = User(user: user)
+                        User.setCurrent(user, writeToUserDefaults: true)
+                        print("Got user \(user.name)")
+                        self.coordinator.goToHomeController()
+                    }
+                }
+            } else {
+                NetworkManager.authorizationCode = refreshToken
+                NetworkManager.fetchAccessToken { (result) in
+                    switch result {
+                    case .failure(let error):
+                        print("couldn't fetch access token \(error.localizedDescription)")
+                    case .success(let spotifyAuth):
+                        NetworkManager.getUser(accessToken: spotifyAuth.accessToken) { (result) in
+                            DispatchQueue.main.async {
+                                switch result {
+                                case .failure(let error):
+                                    print("couldn't fetch user \(error.localizedDescription)")
+                                case .success(let user):
+                                    let user = User(user: user)
+                                    User.setCurrent(user, writeToUserDefaults: true)
+                                    print("Got user \(user.name)")
+                                    self.coordinator.goToHomeController()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            //go to log in
+//            let nav = UINavigationController(rootViewController: loginController)
+//            window!.rootViewController = nav
+            coordinator.goToLogInController()
+        }
     }
+}
 
-    func sceneDidEnterBackground(_ scene: UIScene) {
-        // Called as the scene transitions from the foreground to the background.
-        // Use this method to save data, release shared resources, and store enough scene-specific state information
-        // to restore the scene back to its current state.
-
-        // Save changes in the application's managed object context when the application transitions to the background.
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+//MARK: Spotify Methods
+extension SceneDelegate {
+    func connect() {
+        self.appRemote.authorizeAndPlayURI(self.playURI)
     }
+}
 
+extension SceneDelegate: SPTAppRemoteDelegate {
+    func appRemoteDidEstablishConnection(_ appRemote: SPTAppRemote) {
+        // Connection was successful, you can begin issuing commands
+        self.appRemote = appRemote
+        self.appRemote.playerAPI?.pause(nil)
+//        tabBarController.appRemoteConnected()
+    }
+    func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
+        print("disconnected")
+//        tabBarController.appRemoteDisconnect()
+    }
+    func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
+        print("failed")
+//        tabBarController.appRemoteDisconnect()
+    }
+}
 
+extension SceneDelegate: SPTAppRemotePlayerStateDelegate {
+    func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
+//        tabBarController.playerStateDidChange(playerState)
+//        tabBarController.appRemoteConnected()
+    }
 }
 
