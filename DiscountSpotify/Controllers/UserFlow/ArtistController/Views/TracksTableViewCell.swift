@@ -9,6 +9,10 @@
 import UIKit
 import Spartan
 
+protocol SpotifyFavoriteTrackProtocol {
+    func favoriteTrack(trackId: String, shouldFavorite: Bool)
+}
+
 class TrackCell: UITableViewCell {
 
     static let identifier: String = "TrackTableViewCell"
