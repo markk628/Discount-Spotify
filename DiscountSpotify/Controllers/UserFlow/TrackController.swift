@@ -16,12 +16,25 @@ class TrackController: UIViewController {
     var track: Track!
     var player: AVPlayer?
     var store = CoreDataStack(modelName: "DiscountSpotify")
+    var timer: Timer?
+    
+    var spartanCallbackError: (Error?) -> () {
+        get {
+            return {[weak self] error in
+                if let error = error {
+//                    self?.presentAlert(title: "Error", message: error.localizedDescription)
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
     
     lazy var mainStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .center
         stackView.distribution = .fill
+        stackView.spacing = 20
         return stackView
     }()
     
@@ -32,9 +45,18 @@ class TrackController: UIViewController {
         return imageView
     }()
     
-    lazy var albumNameLabel: UILabel = {
+    lazy var trackNameLabel: UILabel = {
         let label = UILabel()
         let systemFont = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.font = systemFont
+        label.textColor = .lightCyan
+        label.text = track.name
+        return label
+    }()
+    
+    lazy var albumNameLabel: UILabel = {
+        let label = UILabel()
+        let systemFont = UIFont.systemFont(ofSize: 18, weight: .light)
         label.font = systemFont
         label.textColor = .lightCyan
         label.text = track.album.name
@@ -71,6 +93,13 @@ class TrackController: UIViewController {
         return button
     }()
     
+    lazy var dismissArrowImageView: UIImageView = {
+        let imageView = UIImageView()
+        let image = UIImage(named: "dismiss")?.withTintColor(.fluorescentBlue).withRenderingMode(.alwaysOriginal)
+        imageView.image = image
+        return imageView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -79,20 +108,24 @@ class TrackController: UIViewController {
 
     fileprivate func setupViews() {
         self.view.backgroundColor = .black
-        self.title = track.name
         downloadImage()
         self.view.addSubview(mainStackView)
         mainStackView.snp.makeConstraints {
-            $0.centerX.centerY.equalToSuperview()
-            $0.height.equalToSuperview().multipliedBy(0.6)
+            $0.centerX.equalToSuperview()
+            $0.height.equalToSuperview().multipliedBy(0.9)
             $0.width.equalToSuperview().multipliedBy(0.8)
+            $0.top.equalToSuperview().offset(20)
         }
 
-        [albumImageView, albumNameLabel, trackSlider, playAndFavoriteButtonStackView].forEach {
+        [dismissArrowImageView, albumImageView, trackNameLabel, albumNameLabel, trackSlider, playAndFavoriteButtonStackView].forEach {
             mainStackView.addArrangedSubview($0)
             $0.snp.makeConstraints {
                 $0.width.equalToSuperview()
             }
+        }
+        dismissArrowImageView.snp.makeConstraints {
+            $0.height.equalTo(40)
+            $0.width.equalToSuperview().multipliedBy(0.3)
         }
         albumImageView.snp.makeConstraints {
             $0.height.equalTo(albumImageView.snp.width)
@@ -106,15 +139,42 @@ class TrackController: UIViewController {
         }
     }
     
+    func currentTime() -> (current: Double, duration: Double) {
+        // Access current item
+        if let currentItem = player?.currentItem,
+           currentItem.duration >= CMTime.zero {
+            // Get the current time in seconds
+            let playhead = currentItem.currentTime().seconds
+            let duration = currentItem.duration.seconds
+            return (playhead, duration)
+        }
+        return (0, 0)
+    }
+    
     @objc func playButtonPressed() {
         retrieveAudioPreview()
         player?.play()
+        DispatchQueue.main.async {
+            self.timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(self.updateTrackTime), userInfo: nil, repeats: true)
+        }
+    }
+    
+    @objc func updateTrackTime() {
+        guard let player = player,
+              let item = player.currentItem,
+              item.status == .readyToPlay //make sure item is ready to play
+        else { return }
+        let times = currentTime()
+        //update slider
+        trackSlider.maximumValue = Float(times.duration)
+        trackSlider.value = Float(times.current)
     }
     
     @objc func favoriteButtonPressed() {
-        let newTrack = FavTracks(context: store.mainContext)
-        newTrack.trackCoreData = (track.id as! String)
-        store.saveContext()
+//        let newTrack = FavTracks(context: store.mainContext)
+//        newTrack.trackCoreData = (track.id as! String)
+//        store.saveContext()
+        Spartan.saveTracks(trackIds: [track?.id as! String], success: nil, failure: spartanCallbackError)
     }
     
     @objc func updateTrackSlider() {
@@ -124,6 +184,11 @@ class TrackController: UIViewController {
         player.seek(to: targetTime)
         if player.rate == 0 {
             player.play()
+        }
+        var count = Float(track.durationMs/1000)
+        while count > 0 {
+            trackSlider.value = count
+            count -= 1
         }
     }
     

@@ -28,7 +28,12 @@ class FavoritesController: UIViewController {
         }
     }
     
-    var favoriteDelegate: SpotifyFavoriteTrackProtocol?
+    var refreshControl: UIRefreshControl = {
+        let refresh = UIRefreshControl()
+        refresh.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refresh.addTarget(self, action: #selector(reloadTableView), for: .valueChanged)
+        return refresh
+    }()
     
     lazy var fetchedResultsController: NSFetchedResultsController<FavTracks> = {
         let fetchedRequest: NSFetchRequest<FavTracks> = FavTracks.fetchRequest()
@@ -51,12 +56,13 @@ class FavoritesController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        if UserDefaults.standard.bool(forKey: "firstTime") == true {
-            fetchFavTracks()
-            UserDefaults.standard.set(false, forKey: "firstTime")
-        } else {
-            fetchFavTracksFromCD()
-        }
+//        if UserDefaults.standard.bool(forKey: "firstTime") == true {
+//            fetchFavTracks()
+//            UserDefaults.standard.set(false, forKey: "firstTime")
+//        } else {
+//            fetchFavTracksFromCD()
+//        }
+        fetchFavTracks()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,6 +82,8 @@ class FavoritesController: UIViewController {
         tracksTableView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
+        
+        tracksTableView.addSubview(refreshControl)
     }
     
     func fetchFavTracks() {
@@ -100,6 +108,7 @@ class FavoritesController: UIViewController {
     
     func fetchFavTracksFromCD() {
         do {
+            trackIds.removeAll()
             try fetchedResultsController.performFetch()
             let favTracks = fetchedResultsController.fetchedObjects
             favTracks?.forEach({ (result) in
@@ -124,45 +133,33 @@ class FavoritesController: UIViewController {
             print(error.localizedDescription)
         }
     }
+    
+    @objc func reloadTableView() {
+        fetchFavTracks()
+        refreshControl.endRefreshing()
+    }
 }
 
 extension FavoritesController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let track = tracks[indexPath.row]
-        self.coordinator.goToTrackControllerFavorite(track: track)
+        coordinator.tabBarController.currentTrack = track
+        coordinator.tabBarController.miniPlayerContainerView.configure(track: track)
     }
-    
-//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-//        let modifyAction = UIContextualAction(style: .normal, title: "(Un)Favorite") { (UIContextualAction, UIView, success: (Bool) -> Void) in
-//            Spartan.removeSavedTracks(trackIds: [self.tracks[indexPath.row].id as! String], success: nil, failure: self.spartanCallbackError)
-//            let trackRow = self.tracks.firstIndex(of: self.tracks[indexPath.row])
-//            if trackRow != nil {
-//                self.tracks.remove(at: trackRow!)
-////                self.store.mainContext.delete(self.fetchedResultsController.object(at: indexPath))
-////                self.store.saveContext()
-//
-//                let indexPath = IndexPath(row: trackRow!, section: 0)
-//                self.tracksTableView.deleteRows(at: [indexPath], with: .left)
-//            }
-//            success(true)
-//        }
-//        modifyAction.image = UIImage(named: "heart")
-//        modifyAction.backgroundColor = .systemRed
-//        return UISwipeActionsConfiguration(actions: [modifyAction])
-//    }
 }
 
 extension FavoritesController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        self.store.mainContext.delete(self.fetchedResultsController.object(at: indexPath))
-        self.store.saveContext()
+        if editingStyle == .delete {
+            store.mainContext.delete(fetchedResultsController.object(at: indexPath))
+            store.saveContext()
+            trackIds.remove(at: indexPath.row)
+            Spartan.removeSavedTracks(trackIds: [tracks[indexPath.row].id as! String], success: nil, failure: spartanCallbackError)
+        }
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        guard let sectionInfo = fetchedResultsController.sections?[section] else { return 0 }
-//        return sectionInfo.numberOfObjects
-//        let favTracksCount = fetchedResultsController.fetchedObjects?.count ?? 1
-//        return favTracksCount
         return tracks.count
     }
     
@@ -187,20 +184,13 @@ extension FavoritesController: NSFetchedResultsControllerDelegate {
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
-        case .insert:
-//            tracksTableView.insertRows(at: [newIndexPath!], with: .automatic)
-            break
         case .delete:
             tracks.remove(at: indexPath!.row)
             tracksTableView.deleteRows(at: [indexPath!], with: .left)
-        case .update:
-//            let cell = tracksTableView.cellForRow(at: indexPath!) as! TrackCell
-//            configureCell(cell: cell, for: indexPath!)
-            break
-        case .move:
-            tracksTableView.deleteRows(at: [indexPath!], with: .automatic)
-            tracksTableView.insertRows(at: [newIndexPath!], with: .automatic)
+        default:
+            print("this executable enough for ya?")
         }
+        
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {

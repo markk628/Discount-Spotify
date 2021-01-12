@@ -46,6 +46,7 @@
 		FE76C5C725AD824F00F68B53 /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE76C5C625AD824F00F68B53 /* AppService.swift */; };
 		FE76C5CC25AD856900F68B53 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE76C5CB25AD856900F68B53 /* UIView+Extensions.swift */; };
 		FE76C5D125AD87AA00F68B53 /* TrackRemoteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE76C5D025AD87AA00F68B53 /* TrackRemoteController.swift */; };
+		FE76C5DE25AE1E3E00F68B53 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE76C5DD25AE1E3E00F68B53 /* MiniPlayerView.swift */; };
 		FE7FE5D3258046D9000978AD /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7FE5D2258046D9000978AD /* NetworkManager.swift */; };
 		FE9A10EC257A11EB0041A7A1 /* ArtistsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9A10EB257A11EB0041A7A1 /* ArtistsTableViewCell.swift */; };
 		FECF685925A94A36009EA06E /* FavTracks+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECF685725A94A36009EA06E /* FavTracks+CoreDataClass.swift */; };
@@ -122,6 +123,7 @@
 		FE76C5C625AD824F00F68B53 /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
 		FE76C5CB25AD856900F68B53 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		FE76C5D025AD87AA00F68B53 /* TrackRemoteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackRemoteController.swift; sourceTree = "<group>"; };
+		FE76C5DD25AE1E3E00F68B53 /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
 		FE7FE5D2258046D9000978AD /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		FE9A10EB257A11EB0041A7A1 /* ArtistsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistsTableViewCell.swift; sourceTree = "<group>"; };
 		FECF685725A94A36009EA06E /* FavTracks+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FavTracks+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -346,6 +348,7 @@
 		FECF686525A94E82009EA06E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				FE76C5DD25AE1E3E00F68B53 /* MiniPlayerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -632,6 +635,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE76C5DE25AE1E3E00F68B53 /* MiniPlayerView.swift in Sources */,
 				FE5C51C32580B70100A5B7E5 /* ArtistController.swift in Sources */,
 				FE6D56CC25AC252F005307F8 /* Defaults.swift in Sources */,
 				FE6D56C725AC2447005307F8 /* UserDefaults+Extensions.swift in Sources */,
