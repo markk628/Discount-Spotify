@@ -11,6 +11,8 @@ import CoreData
 class CoreDataStack {
     private let modelName: String
     
+    var count = 0
+        
     init(modelName: String) {
         self.modelName = modelName
     }
@@ -38,8 +40,9 @@ extension CoreDataStack {
     func saveContext() {
         guard mainContext.hasChanges else { return }
         do {
+            count += 1
             try mainContext.save()
-            print("saved to CD")
+            print("saved to CD \(count)")
         } catch let nserror as NSError {
             fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
         }

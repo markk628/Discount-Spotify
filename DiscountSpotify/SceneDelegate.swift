@@ -43,6 +43,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let parameters = loginController.appRemote.authorizationParameters(from: url)
         if let code = parameters?["code"] {
             NetworkManager.authorizationCode = code
+            loginController.coordinator = coordinator
             loginController.fetchSpotifyAccessToken()
         } else if let accessToken = parameters?[SPTAppRemoteAccessTokenKey] {
             appRemote.connectionParameters.accessToken = accessToken
@@ -111,8 +112,7 @@ extension SceneDelegate {
             }
         } else {
             //go to log in
-//            let nav = UINavigationController(rootViewController: loginController)
-//            window!.rootViewController = nav
+            UserDefaults.standard.set(true, forKey: "firstTime")
             coordinator.goToLogInController()
         }
     }

@@ -31,6 +31,7 @@ extension TabBarController {
     }
     
     func setupTabBarController() {
+        
         self.tabBar.barTintColor = .black
         self.tabBar.tintColor = .electricBlue
     }

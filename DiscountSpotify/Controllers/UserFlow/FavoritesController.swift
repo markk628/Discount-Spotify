@@ -15,7 +15,7 @@ class FavoritesController: UIViewController {
     var coordinator: TabBarCoordinator!
     var store = CoreDataStack(modelName: "DiscountSpotify")
     var trackIds: [String] = []
-//    var tracks: [SavedTrack] = []
+//    var savedTracks: [SavedTrack] = []
     var tracks: [Track] = []
     var offset: Int = 0
     
@@ -40,10 +40,17 @@ class FavoritesController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
+        if UserDefaults.standard.bool(forKey: "firstTime") == true {
+            fetchFavTracks()
+            UserDefaults.standard.set(false, forKey: "firstTime")
+        } else {
+            fetchFavTracksFromCD()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        fetchFavTracks()
+//        fetchFavTracks()
+        fetchFavTracksFromCD()
 //        self.tracksTableView.reloadData()
     }
     
@@ -64,18 +71,41 @@ class FavoritesController: UIViewController {
     }
     
     func fetchFavTracks() {
+        NetworkManager.getFavoriteTracks(offset: offset) { (result) in
+            switch result {
+            case .failure(let error):
+                self.presentAlert(title: "Error Getting Saved Tracks", message: error.localizedDescription)
+            case .success(let savedTracks):
+                var savedArray: [Track] = []
+                savedTracks.forEach {
+                    let newTrack = FavTracks(context: self.store.mainContext)
+                    newTrack.trackCoreData = ($0.track.id as! String)
+                    print($0.track.name)
+                    self.store.saveContext()
+                    savedArray.append($0.track)
+                }
+                
+                self.tracks = savedArray
+                self.offset = savedTracks.count - 1
+                self.tracksTableView.reloadData()
+            }
+        }
+    }
+    
+    func fetchFavTracksFromCD() {
         do {
-            trackIds.removeAll()
+//            trackIds.removeAll()
             try fetchedResultsController.performFetch()
             let favTracks = fetchedResultsController.fetchedObjects
             favTracks?.forEach({ (result) in
                 trackIds.append(result.trackCoreData ?? "")
             })
+            print(trackIds)
             NetworkManager.getCoreDataTracks(ids: trackIds) { (result) in
                 switch result {
                 case .failure(let error):
                     DispatchQueue.main.async {
-                        self.presentAlert(title: "No Tracks", message: "Add Tracks To Your Favorites")
+//                        self.presentAlert(title: "No Tracks", message: "Add Tracks To Your Favorites")
                         print(error.localizedDescription)
                     }
                 case .success(let tracks):
@@ -86,18 +116,8 @@ class FavoritesController: UIViewController {
 
                 }
             }
-//            NetworkManager.getFavoriteTracks(offset: offset) { (result) in
-//                switch result {
-//                case .failure(let error):
-//                    self.presentAlert(title: "Error Getting Saved Tracks", message: error.localizedDescription)
-//                case .success(let savedTracks):
-//                    self.tracks = savedTracks
-//                    self.offset = savedTracks.count - 1
-//                    self.tracksTableView.reloadData()
-//                }
-//            }
         } catch {
-            print(error)
+            print(error.localizedDescription)
         }
     }
 }
@@ -105,7 +125,6 @@ class FavoritesController: UIViewController {
 extension FavoritesController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let track = tracks[indexPath.row]
-//        self.coordinator.goToTrackControllerFavorite(track: track.track)
         self.coordinator.goToTrackControllerFavorite(track: track)
     }
 }
@@ -122,7 +141,6 @@ extension FavoritesController: UITableViewDataSource {
         let track = self.tracks[indexPath.row]
         DispatchQueue.global(qos: .userInteractive).async {
             DispatchQueue.main.async {
-//                cell.populateViews(track: track.track, rank: indexPath.row + 1)
                 cell.populateViews(track: track, rank: indexPath.row + 1)
                 cell.layoutSubviews()
             }

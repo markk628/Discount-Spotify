@@ -261,13 +261,13 @@ class NetworkManager {
         }
     }
     
-//    static func getFavoriteTracks(offset: Int, completion: @escaping (Result<[SavedTrack], Error>) -> Void) {
-//        Spartan.getSavedTracks(limit: 50, offset: offset, market: .us) { (pagingObject) in
-//            completion(.success(pagingObject.items))
-//        } failure: { (error) in
-//            completion(.failure(error))
-//        }
-//    }
+    static func getFavoriteTracks(offset: Int, completion: @escaping (Result<[SavedTrack], Error>) -> Void) {
+        Spartan.getSavedTracks(limit: 50, offset: offset, market: .us) { (pagingObject) in
+            completion(.success(pagingObject.items))
+        } failure: { (error) in
+            completion(.failure(error))
+        }
+    }
     
     static func getCoreDataTracks(ids: [String], market: CountryCode = .us, completion: @escaping (Result<[Track], Error>) -> Void) {
         Spartan.getTracks(ids: ids, market: market) { (tracks) in

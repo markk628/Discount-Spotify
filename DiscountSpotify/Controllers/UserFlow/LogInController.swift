@@ -72,9 +72,7 @@ class LogInController: UIViewController {
         setupViews()
     }
     
-    fileprivate func setupViews() {
-        self.view.backgroundColor = .black
-        
+    fileprivate func setupViews() {        
         self.view.addSubview(backgroundImage)
         backgroundImage.snp.makeConstraints {
             $0.edges.equalToSuperview()
@@ -118,6 +116,7 @@ class LogInController: UIViewController {
                 DispatchQueue.main.async {
                     self.presentAlert(title: "Error fetching token", message: error.localizedDescription)
                 }
+                return
             case .success(let spotifyAuth):
                 NetworkManager.getUser(accessToken: spotifyAuth.accessToken) { (result) in
                     DispatchQueue.main.async {
@@ -147,46 +146,6 @@ class LogInController: UIViewController {
             sessionManager.initiateSession(with: scopes, options: .clientOnly, presenting: self)
         }
     }
-    
-//    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-//        return self.view.window ?? ASPresentationAnchor()
-//    }
-    
-//    func authenticate() {
-//        let scopeAsString = NetworkManager.stringScopes.joined(separator: "%20")
-//        let url = URL(string: "https://accounts.spotify.com/authorize?client_id=\(NetworkManager.clientId)&response_type=code&redirect_uri=\(NetworkManager.redirectURI)&scope=\(scopeAsString)")!
-//        let scheme = "auth"
-//        let session = ASWebAuthenticationSession(url: url, callbackURLScheme: scheme) { (callbackUrl, error) in
-//            guard let callbackUrl = callbackUrl, error == nil else { return }
-//            let queryItems = URLComponents(string: callbackUrl.absoluteString)?.queryItems
-//
-//            guard let requestToken = queryItems?.first(where: { $0.name == "code" })?.value else { return }
-//            NetworkManager.authorizationCode = requestToken
-//            NetworkManager.fetchAccessToken { (result) in
-//                switch result {
-//                case .failure(let error):
-//                    DispatchQueue.main.async {
-//                        self.presentAlert(title: "Failed To Login", message: error.localizedDescription)
-//                        print(error.localizedDescription)
-//                    }
-//                case .success(let spotifyAuth):
-//                    NetworkManager.getUser(accessToken: spotifyAuth.accessToken) { (result) in
-//                        switch result {
-//                        case .failure(let error):
-//                            DispatchQueue.main.async {
-//                                self.presentAlert(title: "Failed To Get User", message: error.localizedDescription)
-//                                print(error.localizedDescription)
-//                            }
-//                        case .success(_):
-//                            self.coordinator.goToHomeController()
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        session.presentationContextProvider = self
-//        session.start()
-//    }
 }
 
 // MARK: - SPTAppRemoteDelegate

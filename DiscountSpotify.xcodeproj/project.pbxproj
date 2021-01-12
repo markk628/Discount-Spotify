@@ -29,6 +29,7 @@
 		FE0B62632576D31A00FE0C30 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0B62622576D31A00FE0C30 /* AppCoordinator.swift */; };
 		FE0B626B2576E07C00FE0C30 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0B626A2576E07C00FE0C30 /* UIColor+Extensions.swift */; };
 		FE51409D25ACF21C00E90BFA /* UINavigationController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE51409C25ACF21C00E90BFA /* UINavigationController+Extensions.swift */; };
+		FE5140A225AD576600E90BFA /* MaxPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5140A125AD576600E90BFA /* MaxPlayerController.swift */; };
 		FE5C51BD2580A2F500A5B7E5 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5C51BC2580A2F500A5B7E5 /* UIViewController+Extensions.swift */; };
 		FE5C51C32580B70100A5B7E5 /* ArtistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5C51C22580B70100A5B7E5 /* ArtistController.swift */; };
 		FE5DF08925818B0A002CED16 /* SpotifyAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DF08825818B0A002CED16 /* SpotifyAuth.swift */; };
@@ -42,6 +43,9 @@
 		FE6D56CC25AC252F005307F8 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6D56CB25AC252F005307F8 /* Defaults.swift */; };
 		FE6D56D125AC2E90005307F8 /* MiniPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6D56D025AC2E90005307F8 /* MiniPlayerController.swift */; };
 		FE6D56D925AC311B005307F8 /* Track+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6D56D825AC311B005307F8 /* Track+Extensions.swift */; };
+		FE76C5C725AD824F00F68B53 /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE76C5C625AD824F00F68B53 /* AppService.swift */; };
+		FE76C5CC25AD856900F68B53 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE76C5CB25AD856900F68B53 /* UIView+Extensions.swift */; };
+		FE76C5D125AD87AA00F68B53 /* TrackRemoteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE76C5D025AD87AA00F68B53 /* TrackRemoteController.swift */; };
 		FE7FE5D3258046D9000978AD /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7FE5D2258046D9000978AD /* NetworkManager.swift */; };
 		FE9A10EC257A11EB0041A7A1 /* ArtistsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9A10EB257A11EB0041A7A1 /* ArtistsTableViewCell.swift */; };
 		FECF685925A94A36009EA06E /* FavTracks+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECF685725A94A36009EA06E /* FavTracks+CoreDataClass.swift */; };
@@ -100,6 +104,7 @@
 		FE0B62622576D31A00FE0C30 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		FE0B626A2576E07C00FE0C30 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		FE51409C25ACF21C00E90BFA /* UINavigationController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extensions.swift"; sourceTree = "<group>"; };
+		FE5140A125AD576600E90BFA /* MaxPlayerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaxPlayerController.swift; sourceTree = "<group>"; };
 		FE5C51BC2580A2F500A5B7E5 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		FE5C51C22580B70100A5B7E5 /* ArtistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistController.swift; sourceTree = "<group>"; };
 		FE5DF08825818B0A002CED16 /* SpotifyAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyAuth.swift; sourceTree = "<group>"; };
@@ -114,6 +119,9 @@
 		FE6D56CB25AC252F005307F8 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		FE6D56D025AC2E90005307F8 /* MiniPlayerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerController.swift; sourceTree = "<group>"; };
 		FE6D56D825AC311B005307F8 /* Track+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Track+Extensions.swift"; sourceTree = "<group>"; };
+		FE76C5C625AD824F00F68B53 /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
+		FE76C5CB25AD856900F68B53 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		FE76C5D025AD87AA00F68B53 /* TrackRemoteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackRemoteController.swift; sourceTree = "<group>"; };
 		FE7FE5D2258046D9000978AD /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		FE9A10EB257A11EB0041A7A1 /* ArtistsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistsTableViewCell.swift; sourceTree = "<group>"; };
 		FECF685725A94A36009EA06E /* FavTracks+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FavTracks+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -199,8 +207,10 @@
 		FE01B7B5255E114C00C7D437 /* DiscountSpotify */ = {
 			isa = PBXGroup;
 			children = (
+				FE76C5C525AD824200F68B53 /* Services */,
 				FE01B7B6255E114C00C7D437 /* AppDelegate.swift */,
 				FE01B7B8255E114C00C7D437 /* SceneDelegate.swift */,
+				FE5DF0BC25822B7C002CED16 /* CoreDataStack */,
 				FE9A10E7257A05EA0041A7A1 /* Models */,
 				FE9A10E5257A05D60041A7A1 /* Controllers */,
 				FECF686525A94E82009EA06E /* Views */,
@@ -274,8 +284,27 @@
 				FE6D56C625AC2447005307F8 /* UserDefaults+Extensions.swift */,
 				FE6D56D825AC311B005307F8 /* Track+Extensions.swift */,
 				FE51409C25ACF21C00E90BFA /* UINavigationController+Extensions.swift */,
+				FE76C5CB25AD856900F68B53 /* UIView+Extensions.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		FE76C5C525AD824200F68B53 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				FE76C5C625AD824F00F68B53 /* AppService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		FE76C5D525AD87AD00F68B53 /* PlayerController */ = {
+			isa = PBXGroup;
+			children = (
+				FE6D56D025AC2E90005307F8 /* MiniPlayerController.swift */,
+				FE5140A125AD576600E90BFA /* MaxPlayerController.swift */,
+				FE76C5D025AD87AA00F68B53 /* TrackRemoteController.swift */,
+			);
+			path = PlayerController;
 			sourceTree = "<group>";
 		};
 		FE96CD122578C0B500B0E836 /* Network */ = {
@@ -307,7 +336,6 @@
 		FE9A10E7257A05EA0041A7A1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				FE5DF0BC25822B7C002CED16 /* CoreDataStack */,
 				FE5DF08825818B0A002CED16 /* SpotifyAuth.swift */,
 				FE5DF09225819606002CED16 /* User.swift */,
 				FE6D56AF25AC1B33005307F8 /* TrackSubscriber.swift */,
@@ -356,13 +384,13 @@
 		FEDBC6D3257718070021F4EE /* UserFlow */ = {
 			isa = PBXGroup;
 			children = (
+				FE76C5D525AD87AD00F68B53 /* PlayerController */,
 				FE06B95E2580C0CF00A38D89 /* ArtistController */,
 				FE5C51C12580B6E000A5B7E5 /* HomeController */,
 				FE01B7BA255E114C00C7D437 /* LogInController.swift */,
 				FE5DF0B72581DE21002CED16 /* TrackController.swift */,
 				FE0B62552576CFC900FE0C30 /* FavoritesController.swift */,
 				FE0B625A2576CFD500FE0C30 /* ProfileController.swift */,
-				FE6D56D025AC2E90005307F8 /* MiniPlayerController.swift */,
 			);
 			path = UserFlow;
 			sourceTree = "<group>";
@@ -610,11 +638,14 @@
 				FECF685A25A94A36009EA06E /* FavTracks+CoreDataProperties.swift in Sources */,
 				FE5DF0BE25822B90002CED16 /* CoreDataStack.swift in Sources */,
 				FE0B62632576D31A00FE0C30 /* AppCoordinator.swift in Sources */,
+				FE76C5CC25AD856900F68B53 /* UIView+Extensions.swift in Sources */,
 				FE5DF08925818B0A002CED16 /* SpotifyAuth.swift in Sources */,
+				FE76C5C725AD824F00F68B53 /* AppService.swift in Sources */,
 				FE01B7ED255E137B00C7D437 /* Constants.swift in Sources */,
 				FE9A10EC257A11EB0041A7A1 /* ArtistsTableViewCell.swift in Sources */,
 				FE6D56D925AC311B005307F8 /* Track+Extensions.swift in Sources */,
 				FE0B626B2576E07C00FE0C30 /* UIColor+Extensions.swift in Sources */,
+				FE5140A225AD576600E90BFA /* MaxPlayerController.swift in Sources */,
 				FE06B9612580C10200A38D89 /* TracksTableViewCell.swift in Sources */,
 				FE7FE5D3258046D9000978AD /* NetworkManager.swift in Sources */,
 				FE6D56B025AC1B33005307F8 /* TrackSubscriber.swift in Sources */,
@@ -629,6 +660,7 @@
 				FE01B7B9255E114C00C7D437 /* SceneDelegate.swift in Sources */,
 				FE0B625B2576CFD500FE0C30 /* ProfileController.swift in Sources */,
 				FE5C51BD2580A2F500A5B7E5 /* UIViewController+Extensions.swift in Sources */,
+				FE76C5D125AD87AA00F68B53 /* TrackRemoteController.swift in Sources */,
 				FE0B62562576CFC900FE0C30 /* FavoritesController.swift in Sources */,
 				FE51409D25ACF21C00E90BFA /* UINavigationController+Extensions.swift in Sources */,
 				FE01B7C1255E114C00C7D437 /* DiscountSpotify.xcdatamodeld in Sources */,

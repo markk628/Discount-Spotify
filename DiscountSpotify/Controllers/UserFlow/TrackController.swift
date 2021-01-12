@@ -10,11 +10,6 @@ import Spartan
 import AVFoundation
 import Kingfisher
 
-protocol MaxiPlayerSourceProtocol: class {
-  var originatingFrameInWindow: CGRect { get }
-  var originatingCoverImageView: UIImageView { get }
-}
-
 class TrackController: UIViewController {
 
     var coordinator: TabBarCoordinator!
