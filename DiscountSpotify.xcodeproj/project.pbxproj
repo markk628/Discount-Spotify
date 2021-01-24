@@ -51,6 +51,7 @@
 		FE9A10EC257A11EB0041A7A1 /* ArtistsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9A10EB257A11EB0041A7A1 /* ArtistsTableViewCell.swift */; };
 		FECF685925A94A36009EA06E /* FavTracks+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECF685725A94A36009EA06E /* FavTracks+CoreDataClass.swift */; };
 		FECF685A25A94A36009EA06E /* FavTracks+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECF685825A94A36009EA06E /* FavTracks+CoreDataProperties.swift */; };
+		FED9333825BD3A86005E5E73 /* Blurring.swift in Sources */ = {isa = PBXBuildFile; fileRef = FED9333725BD3A86005E5E73 /* Blurring.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,6 +129,7 @@
 		FE9A10EB257A11EB0041A7A1 /* ArtistsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistsTableViewCell.swift; sourceTree = "<group>"; };
 		FECF685725A94A36009EA06E /* FavTracks+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FavTracks+CoreDataClass.swift"; sourceTree = "<group>"; };
 		FECF685825A94A36009EA06E /* FavTracks+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FavTracks+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		FED9333725BD3A86005E5E73 /* Blurring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Blurring.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -341,6 +343,7 @@
 				FE5DF08825818B0A002CED16 /* SpotifyAuth.swift */,
 				FE5DF09225819606002CED16 /* User.swift */,
 				FE6D56AF25AC1B33005307F8 /* TrackSubscriber.swift */,
+				FED9333725BD3A86005E5E73 /* Blurring.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -651,6 +654,7 @@
 				FE0B626B2576E07C00FE0C30 /* UIColor+Extensions.swift in Sources */,
 				FE5140A225AD576600E90BFA /* MaxPlayerController.swift in Sources */,
 				FE06B9612580C10200A38D89 /* TracksTableViewCell.swift in Sources */,
+				FED9333825BD3A86005E5E73 /* Blurring.swift in Sources */,
 				FE7FE5D3258046D9000978AD /* NetworkManager.swift in Sources */,
 				FE6D56B025AC1B33005307F8 /* TrackSubscriber.swift in Sources */,
 				FE5DF08E25818C03002CED16 /* ErrorMesseges.swift in Sources */,

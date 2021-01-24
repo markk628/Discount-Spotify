@@ -19,7 +19,6 @@ class TabBarController: UITabBarController, TrackSubscriber {
     
     lazy var miniPlayerContainerView: MiniPlayerView = {
         let view = MiniPlayerView()
-        view.backgroundColor = .black
         view.isUserInteractionEnabled = true
         return view
     }()

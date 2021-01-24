@@ -28,6 +28,12 @@ class MiniPlayerView: UIView, TrackSubscriber {
         }
     }
     
+    private let opacityView: UIView = {
+        let view = UIView()
+        view.addBlur()
+        return view
+    }()
+    
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -94,7 +100,12 @@ class MiniPlayerView: UIView, TrackSubscriber {
     
     private func setupViews() {
 
-        self.addSubview(stackView)
+        self.addSubview(opacityView)
+        opacityView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        opacityView.addSubview(stackView)
         stackView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
