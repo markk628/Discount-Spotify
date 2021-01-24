@@ -2,11 +2,11 @@
 An iOS app that authenticates users through Spotify iOS SDK, makes network calls to show the user’s top artists, their top 10 tracks and a 30 second preview, and an option to save tracks at to the user's liked songs
 ## Demo
 ### Authentication
-![](static/login.PNG | width=100)
+![](static/login.png =100x)
 ### Top Artists & Their Top Tracks
-![](static/login.PNG) ![](static/topArtists.PNG) ![](static/topTracks.PNG) ![](static/max.PNG)
+![](static/login.png) ![](static/topArtists.png) ![](static/topTracks.png) ![](static/max.png)
 ### User's Liked Songs & Profile
-![](static/likedSongs.PNG) ![](static/profile.PNG)
+![](static/likedSongs.png) ![](static/profile.png)
 ## How It Works
 * Users authenticate with their Spotify account so the network calls can be made to pull the proper data
 * Network calls are made by Spartan's functions
